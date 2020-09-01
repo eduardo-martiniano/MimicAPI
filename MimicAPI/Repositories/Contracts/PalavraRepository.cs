@@ -19,6 +19,7 @@ namespace MimicAPI.Repositories.Contracts
 
         public void Cadastrar(Palavra palavra)
         {
+            palavra.Criado = DateTime.Now.Date;
             _banco.Palavras.Add(palavra);
             _banco.SaveChanges();
         }
@@ -49,15 +50,16 @@ namespace MimicAPI.Repositories.Contracts
             return palavra;
         }
 
-
-        public List<Palavra> ObterTodas(DateTime? data)
+        public List<Palavra> ObterTodas(DateTime? data, int limit, int offset)
         {
-            var palavras = _banco.Palavras.AsQueryable();
+            var query = _banco.Palavras.AsQueryable();
+            
             if(data.HasValue)
             {
-                palavras = palavras.Where(a => a.Criado >= data.Value || a.Atualizado >= data.Value);
+                query = query.Where(a => a.Criado >= data.Value || a.Atualizado >= data.Value);
             }
-            return palavras.ToList();
+            
+            return query.Skip(offset * limit).Take(limit).OrderByDescending(o => o.Atualizado).ToList();        
         }
 
         public Palavra ObterUma(int id)

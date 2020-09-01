@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace MimicAPI.Models
 {
@@ -13,6 +11,5 @@ namespace MimicAPI.Models
         public bool Ativo { get; set; }
         public DateTime Criado { get; set; }
         public DateTime? Atualizado { get; set; }
-
     }
 }

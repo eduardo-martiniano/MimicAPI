@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MimicAPI.Database;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MimicAPI.Models;
 using MimicAPI.Repositories.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MimicAPI.Controllers
 {
@@ -13,19 +10,21 @@ namespace MimicAPI.Controllers
     public class PalavrasController : ControllerBase
     {
         private IPalavraRepository _repository;
-        public PalavrasController(IPalavraRepository repository )
+
+        public PalavrasController(IPalavraRepository repository)
         {
             _repository = repository;
-           
-        }
-        [Route("")]
-        [HttpGet]
-        public ActionResult ObterTodas(DateTime? data)
-        {
-            return Ok(_repository.ObterTodas(data));
         }
 
-       [Route("{id}")]
+        [Route("")]
+        [HttpGet]
+        public ActionResult ObterTodas([FromQuery] DateTime? data, [FromQuery] int limit, [FromQuery] int offset)
+        {
+
+            return Ok(_repository.ObterTodas(data, limit, offset));
+        }
+
+        [Route("{id}")]
         [HttpGet]
         public ActionResult ObterUma(int id)
         { 
@@ -41,8 +40,12 @@ namespace MimicAPI.Controllers
         [HttpPost]
         public ActionResult Cadastrar([FromBody] Palavra palavra)
         {
-            _repository.Cadastrar(palavra);
-            return Ok("Palavra cadastrada com sucesso!");
+            if (ModelState.IsValid)
+            {
+                _repository.Cadastrar(palavra);
+                return Ok("Palavra cadastrada com sucesso!");
+            }
+            return BadRequest();
         }
         
         [Route("{id}")]
@@ -54,8 +57,15 @@ namespace MimicAPI.Controllers
             {
                 return NotFound("A palavra não existe!");
             }
-            _repository.Editar(id, palavra);
-            return Ok("Palavra editada com sucesso!");
+
+            if (ModelState.IsValid)
+            {
+                _repository.Editar(id, palavra);
+                return Ok("Palavra editada com sucesso!");
+            }
+
+            return BadRequest();
+
         }
         
         [Route("{id}")]
