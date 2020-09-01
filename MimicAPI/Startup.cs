@@ -25,6 +25,16 @@ namespace MimicAPI
             });
             services.AddScoped<IPalavraRepository, PalavraRepository>();
             services.AddMvc();
+
+            services.AddSwaggerGen(cfg =>
+            {
+                cfg.ResolveConflictingActions(apiDescription => apiDescription.First());
+                cfg.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info()
+                {
+                    Title = "MimicAPI",
+                    Version = "v1"
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +46,14 @@ namespace MimicAPI
             }
             app.UseMvc();
             app.UseStatusCodePages();
+            app.UseSwagger(); // /swagger/v1/swagger.json
+            app.UseSwaggerUI(cfg =>
+            {
+                cfg.SwaggerEndpoint("/swagger/v1/swagger.json", "MimicAPI");
+                cfg.RoutePrefix = String.Empty;
+            });
+
+            
 
         }
     }
