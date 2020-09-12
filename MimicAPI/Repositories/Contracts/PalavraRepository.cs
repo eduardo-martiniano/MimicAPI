@@ -50,16 +50,17 @@ namespace MimicAPI.Repositories.Contracts
             return palavra;
         }
 
-        public List<Palavra> ObterTodas(DateTime? data, int limit, int offset)
+        public List<Palavra> ObterTodas(DateTime? data, int? limit, int? offset)
         {
             var query = _banco.Palavras.AsQueryable();
             
             if(data.HasValue)
-            {
                 query = query.Where(a => a.Criado >= data.Value || a.Atualizado >= data.Value);
-            }
             
-            return query.Skip(offset * limit).Take(limit).OrderByDescending(o => o.Atualizado).ToList();        
+            if(!(limit.HasValue && offset.HasValue))
+                return query.ToList();            
+            
+            return query.Skip((int)(offset * limit)).Take((int)limit).OrderByDescending(o => o.Atualizado).ToList();        
         }
 
         public Palavra ObterUma(int id)

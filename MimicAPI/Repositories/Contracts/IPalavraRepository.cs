@@ -9,7 +9,7 @@ namespace MimicAPI.Repositories.Contracts
 {
     public interface IPalavraRepository
     {
-        List<Palavra> ObterTodas(DateTime? data, int limit, int offset);
+        List<Palavra> ObterTodas(DateTime? data, int? limit, int? offset);
         Palavra ObterUma(int id);
         void Cadastrar(Palavra palavra);
         Palavra Editar(int id, [FromBody] Palavra palavra);

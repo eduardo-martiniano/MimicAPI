@@ -18,7 +18,7 @@ namespace MimicAPI.Controllers
 
         [Route("")]
         [HttpGet]
-        public ActionResult ObterTodas([FromQuery] DateTime? data, [FromQuery] int limit, [FromQuery] int offset)
+        public ActionResult ObterTodas([FromQuery] DateTime? data, [FromQuery] int? limit, [FromQuery] int? offset)
         {
 
             return Ok(_repository.ObterTodas(data, limit, offset));
